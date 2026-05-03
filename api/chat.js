@@ -27,8 +27,15 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    console.log('API status:', response.status);
+    console.log('API response:', JSON.stringify(data));
+
     if (!response.ok) {
-      return res.status(response.status).json({ error: data.error?.message || 'API error' });
+      return res.status(response.status).json({ error: data.error?.message || 'API error', debug: data });
+    }
+
+    if (!data.content || !data.content[0]) {
+      return res.status(500).json({ error: 'Unexpected response shape', debug: data });
     }
 
     return res.status(200).json({ content: data.content[0].text });
