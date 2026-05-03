@@ -18,6 +18,7 @@
   }
   body { font-family: 'Pretendard', -apple-system, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
+  /* ── 로그인 ── */
   .login-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 100; }
   .login-box { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 36px 32px; width: 340px; display: flex; flex-direction: column; gap: 16px; }
   .login-box h2 { font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
@@ -28,6 +29,7 @@
   .login-box button:hover { opacity: 0.85; }
   .login-hint { font-size: 11px; color: var(--text3); text-align: center; }
 
+  /* ── 헤더 ── */
   header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
   .logo { display: flex; align-items: center; gap: 10px; }
   .logo-mark { width: 30px; height: 30px; background: var(--accent-bg); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--accent-text); font-size: 14px; }
@@ -40,17 +42,25 @@
   .ctx-badge.active { background: var(--success-bg); color: var(--success); border-color: #a7f3d0; }
   .save-status { font-size: 11px; color: var(--text3); }
 
+  /* ── 레이아웃 ── */
   .main { flex: 1; display: flex; overflow: hidden; }
+
+  /* ── 왼쪽 패널 ── */
   .docs-panel { width: 300px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
-  .panel-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .panel-header { padding: 14px 16px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
   .panel-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); }
   .docs-scroll-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
   .docs-scroll-area::-webkit-scrollbar { width: 4px; }
   .docs-scroll-area::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
-  .doc-list { padding: 10px 10px 4px; display: flex; flex-direction: column; gap: 6px; }
+
+  /* 섹션 구분 */
+  .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); padding: 12px 10px 4px; }
+
+  /* 문서 카드 */
+  .doc-list { padding: 4px 10px; display: flex; flex-direction: column; gap: 6px; }
   .doc-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); transition: border-color 0.15s; }
   .doc-card.filled { border-color: #a7f3d0; background: #fafffe; }
-  .doc-card.readonly { opacity: 0.7; }
+  .doc-card.readonly { opacity: 0.65; }
   .doc-trigger { padding: 10px 12px; display: flex; align-items: center; gap: 9px; cursor: pointer; user-select: none; }
   .doc-icon { font-size: 15px; flex-shrink: 0; }
   .doc-meta { flex: 1; min-width: 0; }
@@ -66,13 +76,19 @@
   .doc-body textarea:focus { border-color: var(--border2); }
   .doc-body textarea::placeholder { color: var(--text3); }
   .doc-body textarea:disabled { background: var(--bg); color: var(--text2); cursor: not-allowed; }
-  .member-name-row { display: flex; gap: 6px; margin-bottom: 6px; }
-  .member-name-row input { flex: 1; padding: 6px 10px; font-size: 12px; font-family: 'Pretendard', sans-serif; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); outline: none; }
-  .del-btn { padding: 6px 8px; font-size: 11px; background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text3); cursor: pointer; transition: all 0.15s; }
-  .del-btn:hover { border-color: #fca5a5; color: #dc2626; }
-  .add-member-btn { margin: 4px 10px 12px; padding: 9px; background: transparent; border: 1px dashed var(--border2); border-radius: var(--radius); font-size: 12px; color: var(--text2); cursor: pointer; text-align: center; transition: all 0.15s; font-family: 'Pretendard', sans-serif; flex-shrink: 0; }
-  .add-member-btn:hover { background: var(--surface2); color: var(--text); }
 
+  /* 팀원 현황 리스트 */
+  .member-list { padding: 4px 10px 12px; display: flex; flex-direction: column; gap: 5px; }
+  .member-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: var(--radius-sm); background: var(--bg); border: 1px solid var(--border); }
+  .member-avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--text2); flex-shrink: 0; border: 1px solid var(--border); }
+  .member-avatar.me { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; }
+  .member-avatar.admin { background: var(--accent-bg); color: var(--accent-text); border-color: transparent; }
+  .member-name { flex: 1; font-size: 12px; font-weight: 500; color: var(--text); }
+  .log-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border2); flex-shrink: 0; }
+  .log-dot.filled { background: #34d399; }
+  .log-dot-label { font-size: 10px; color: var(--text3); }
+
+  /* ── 채팅 ── */
   .chat-area { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
   .chat-messages { flex: 1; overflow-y: auto; padding: 24px 28px; display: flex; flex-direction: column; gap: 18px; }
   .chat-messages::-webkit-scrollbar { width: 4px; }
@@ -114,7 +130,7 @@
 <div class="login-overlay" id="loginOverlay">
   <div class="login-box">
     <h2>🗂 팀 업무 현황 봇</h2>
-    <p>이름을 입력하면 자신의 업무 로그를 수정할 수 있어요.<br/>팀장 이름으로 들어오면 전체 문서를 관리할 수 있습니다.</p>
+    <p>이름을 입력하면 자동으로 팀원으로 등록되고<br/>자신의 업무 로그를 올릴 수 있어요.</p>
     <input type="text" id="nameInput" placeholder="이름 입력 (예: 김민준)" maxlength="20" onkeydown="if(event.key==='Enter') login()" />
     <button onclick="login()">입장하기</button>
     <div class="login-hint">이름은 이 기기에 저장돼요</div>
@@ -139,11 +155,10 @@
 <div class="main">
   <div class="docs-panel">
     <div class="panel-header">
-      <span class="panel-label">컨텍스트 문서</span>
+      <div class="panel-label">컨텍스트 문서</div>
     </div>
-    <div class="docs-scroll-area">
-      <div class="doc-list" id="docList"></div>
-      <button class="add-member-btn" id="addMemberBtn" onclick="addMember()" style="display:none">+ 팀원 추가</button>
+    <div class="docs-scroll-area" id="docsScrollArea">
+      <!-- JS로 렌더 -->
     </div>
   </div>
 
@@ -171,25 +186,27 @@
 </div>
 
 <script>
-// ── 팀장 이름 설정 (여기만 바꾸면 돼) ──
+// ── 팀장 이름 설정 ──────────────────────────────
 const ADMIN_NAME = '방하은';
 
-const BASE_DOCS = [
-  { id: 'plan', icon: '📋', name: '기획안', ph: '서비스 기획안, PRD, 기능 명세서 등을 붙여넣으세요...' },
-  { id: 'meeting', icon: '📝', name: '회의록', ph: '최근 회의 내용, 결정 사항, 액션 아이템 등을 붙여넣으세요...' },
-];
-
+// ── 상태 ────────────────────────────────────────
 let currentUser = null;
 let isAdmin = false;
-let docs = BASE_DOCS.map(d => ({ ...d, content: '', open: false }));
-let members = [];
-let memberSeq = 0;
+
+// state: { baseDocs: {plan, meeting}, members: { 이름: { content, joinedAt } } }
+let state = {
+  baseDocs: { plan: '', meeting: '' },
+  members: {},
+};
+
+// UI 열림 상태 (로컬)
+let openCards = {};
 let messages = [];
 let loading = false;
 let saveTimer = null;
 
-// ── 로그인 ────────────────────────────────────────
-function login() {
+// ── 로그인 ──────────────────────────────────────
+async function login() {
   const name = document.getElementById('nameInput').value.trim();
   if (!name) return;
   currentUser = name;
@@ -198,8 +215,16 @@ function login() {
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('userBadge').textContent = isAdmin ? `👑 ${name} (팀장)` : `👤 ${name}`;
   document.getElementById('userBadge').className = 'user-badge' + (isAdmin ? ' admin' : '');
-  if (isAdmin) document.getElementById('addMemberBtn').style.display = '';
-  loadState();
+
+  await loadState();
+
+  // 팀원이면 자동 등록
+  if (!state.members[name]) {
+    state.members[name] = { content: '', joinedAt: Date.now() };
+    await saveState();
+  }
+
+  renderAll();
 }
 
 window.addEventListener('load', () => {
@@ -207,27 +232,22 @@ window.addEventListener('load', () => {
   if (saved) document.getElementById('nameInput').value = saved;
 });
 
-// ── KV 저장/불러오기 ──────────────────────────────
+// ── KV ──────────────────────────────────────────
 async function loadState() {
   setSaveStatus('불러오는 중...');
   try {
     const res = await fetch('/api/load');
     const data = await res.json();
     if (data.value) {
-      const state = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
-      if (state.docs) docs = state.docs.map(d => ({ ...d, open: false }));
-      if (state.members) { members = state.members.map(m => ({ ...m, open: false })); memberSeq = members.length; }
+      const loaded = typeof data.value === 'string' ? JSON.parse(data.value) : data.value;
+      if (loaded.baseDocs) state.baseDocs = loaded.baseDocs;
+      if (loaded.members) state.members = loaded.members;
     }
   } catch (e) { console.error('load error', e); }
-  renderDocs();
   setSaveStatus('');
 }
 
 async function saveState() {
-  const state = {
-    docs: docs.map(({ id, icon, name, ph, content }) => ({ id, icon, name, ph, content })),
-    members: members.map(({ id, icon, name, ph, content, isMember }) => ({ id, icon, name, ph, content, isMember })),
-  };
   setSaveStatus('저장 중...');
   try {
     await fetch('/api/save', {
@@ -243,98 +263,176 @@ async function saveState() {
 function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveState, 1200); }
 function setSaveStatus(msg) { document.getElementById('saveStatus').textContent = msg; }
 
-// ── 권한 체크 ─────────────────────────────────────
-function canEdit(doc) {
-  if (isAdmin) return true;
-  if (doc.isMember && doc.name === currentUser) return true;
-  return false;
-}
+// ── 렌더 ────────────────────────────────────────
+function renderAll() {
+  const area = document.getElementById('docsScrollArea');
+  area.innerHTML = '';
 
-// ── 렌더 ──────────────────────────────────────────
-function renderDocs() {
-  const list = document.getElementById('docList');
-  list.innerHTML = '';
-  [...docs, ...members].forEach(doc => {
-    const editable = canEdit(doc);
+  // ── 팀 문서 섹션 (기획안/회의록) ──
+  const teamLabel = document.createElement('div');
+  teamLabel.className = 'section-label';
+  teamLabel.textContent = '팀 문서';
+  area.appendChild(teamLabel);
+
+  const docList = document.createElement('div');
+  docList.className = 'doc-list';
+
+  [
+    { id: 'plan', icon: '📋', name: '기획안', ph: '서비스 기획안, PRD, 기능 명세서 등을 붙여넣으세요...' },
+    { id: 'meeting', icon: '📝', name: '회의록', ph: '최근 회의 내용, 결정 사항, 액션 아이템 등을 붙여넣으세요...' },
+  ].forEach(doc => {
+    const content = state.baseDocs[doc.id] || '';
+    const editable = isAdmin;
+    const open = !!openCards[doc.id];
     const card = document.createElement('div');
-    card.className = 'doc-card' + (doc.content ? ' filled' : '') + (!editable ? ' readonly' : '');
+    card.className = 'doc-card' + (content ? ' filled' : '') + (!editable ? ' readonly' : '');
     card.innerHTML = `
-      <div class="doc-trigger" onclick="toggleDoc('${doc.id}')">
+      <div class="doc-trigger" onclick="toggleCard('${doc.id}')">
         <span class="doc-icon">${doc.icon}</span>
         <div class="doc-meta">
-          ${doc.isMember && isAdmin
-            ? `<div class="member-name-row" onclick="event.stopPropagation()">
-                <input type="text" value="${doc.name}" placeholder="팀원 이름" oninput="renameDoc('${doc.id}', this.value)" />
-                <button class="del-btn" onclick="removeDoc('${doc.id}')">✕</button>
-               </div>`
-            : `<div class="doc-name">${doc.name}</div>`}
-          <div class="doc-hint ${doc.content ? 'ok' : ''}">${doc.content ? '입력됨 · ' + doc.content.length + '자' : '비어있음'}</div>
+          <div class="doc-name">${doc.name}</div>
+          <div class="doc-hint ${content ? 'ok' : ''}">${content ? '입력됨 · ' + content.length + '자' : '비어있음'}</div>
           ${!editable ? '<span class="readonly-tag">읽기 전용</span>' : ''}
         </div>
-        <span class="chevron ${doc.open ? 'open' : ''}">▼</span>
+        <span class="chevron ${open ? 'open' : ''}">▼</span>
       </div>
-      <div class="doc-body ${doc.open ? 'open' : ''}">
-        <textarea placeholder="${doc.ph}" ${!editable ? 'disabled' : `oninput="updateDoc('${doc.id}', this.value)"`}>${doc.content}</textarea>
+      <div class="doc-body ${open ? 'open' : ''}">
+        <textarea placeholder="${doc.ph}" ${!editable ? 'disabled' : `oninput="updateBaseDoc('${doc.id}', this.value)"`}>${content}</textarea>
       </div>`;
-    list.appendChild(card);
+    docList.appendChild(card);
   });
+  area.appendChild(docList);
+
+  // ── 내 로그 섹션 ──
+  const myLabel = document.createElement('div');
+  myLabel.className = 'section-label';
+  myLabel.textContent = '내 업무 로그';
+  area.appendChild(myLabel);
+
+  const myDocList = document.createElement('div');
+  myDocList.className = 'doc-list';
+  const myContent = state.members[currentUser]?.content || '';
+  const myOpen = !!openCards['mylog'];
+  const myCard = document.createElement('div');
+  myCard.className = 'doc-card' + (myContent ? ' filled' : '');
+  myCard.innerHTML = `
+    <div class="doc-trigger" onclick="toggleCard('mylog')">
+      <span class="doc-icon">📌</span>
+      <div class="doc-meta">
+        <div class="doc-name">${currentUser}의 로그</div>
+        <div class="doc-hint ${myContent ? 'ok' : ''}">${myContent ? '입력됨 · ' + myContent.length + '자' : '비어있음'}</div>
+      </div>
+      <span class="chevron ${myOpen ? 'open' : ''}">▼</span>
+    </div>
+    <div class="doc-body ${myOpen ? 'open' : ''}">
+      <textarea placeholder="AI 대화 요약 또는 오늘 한 일을 붙여넣으세요.\n\n예시:\n- OAuth 로그인 플로우 구현 완료\n- 토큰 갱신 race condition 발견, 내일 수정 예정" oninput="updateMyLog(this.value)">${myContent}</textarea>
+    </div>`;
+  myDocList.appendChild(myCard);
+  area.appendChild(myDocList);
+
+  // ── 팀원 현황 섹션 ──
+  const memberLabel = document.createElement('div');
+  memberLabel.className = 'section-label';
+  memberLabel.textContent = '팀원 현황';
+  area.appendChild(memberLabel);
+
+  const memberList = document.createElement('div');
+  memberList.className = 'member-list';
+
+  // 팀장 먼저
+  const allNames = Object.keys(state.members).sort((a, b) => {
+    if (a === ADMIN_NAME) return -1;
+    if (b === ADMIN_NAME) return 1;
+    return (state.members[a].joinedAt || 0) - (state.members[b].joinedAt || 0);
+  });
+
+  allNames.forEach(name => {
+    const hasLog = !!(state.members[name]?.content?.trim());
+    const isMe = name === currentUser;
+    const isThisAdmin = name === ADMIN_NAME;
+    const initials = name.slice(0, 1);
+    const row = document.createElement('div');
+    row.className = 'member-row';
+    row.innerHTML = `
+      <div class="member-avatar ${isThisAdmin ? 'admin' : isMe ? 'me' : ''}">${initials}</div>
+      <div class="member-name">${name}${isThisAdmin ? ' 👑' : ''}${isMe ? ' (나)' : ''}</div>
+      <div class="log-dot ${hasLog ? 'filled' : ''}"></div>
+      <div class="log-dot-label">${hasLog ? '로그 있음' : '미제출'}</div>`;
+    memberList.appendChild(row);
+  });
+
+  if (allNames.length === 0) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'font-size:12px;color:var(--text3);padding:8px 10px;';
+    empty.textContent = '아직 입장한 팀원이 없어요';
+    memberList.appendChild(empty);
+  }
+
+  area.appendChild(memberList);
   updateBadge();
 }
 
-function toggleDoc(id) {
-  const all = [...docs, ...members];
-  const doc = all.find(d => d.id === id);
-  if (doc) { doc.open = !doc.open; renderDocs(); }
+function toggleCard(id) {
+  openCards[id] = !openCards[id];
+  renderAll();
 }
 
-function updateDoc(id, val) {
-  const all = [...docs, ...members];
-  const doc = all.find(d => d.id === id);
-  if (doc) { doc.content = val; updateBadge(); scheduleSave(); }
-  const card = document.querySelector(`[onclick="toggleDoc('${id}')"]`)?.closest('.doc-card');
-  if (card) {
-    card.classList.toggle('filled', !!val);
-    const hint = card.querySelector('.doc-hint');
-    if (hint) { hint.className = 'doc-hint' + (val ? ' ok' : ''); hint.textContent = val ? `입력됨 · ${val.length}자` : '비어있음'; }
-  }
-}
-
-function renameDoc(id, val) {
-  const doc = members.find(d => d.id === id);
-  if (doc) { doc.name = val; scheduleSave(); }
-}
-
-function removeDoc(id) { members = members.filter(d => d.id !== id); renderDocs(); scheduleSave(); }
-
-function addMember() {
-  if (!isAdmin) return;
-  memberSeq++;
-  members.push({
-    id: 'mbr_' + memberSeq, icon: '👤', name: '팀원 ' + memberSeq, isMember: true,
-    ph: 'AI 대화 요약 또는 업무 내용을 붙여넣으세요.\n\n예시:\n- OAuth 로그인 플로우 구현 완료\n- 토큰 갱신 race condition 발견, 내일 수정 예정\n- 카카오 소셜 로그인 연동 60% 완료',
-    content: '', open: true,
-  });
-  renderDocs();
+function updateBaseDoc(id, val) {
+  state.baseDocs[id] = val;
+  updateBadge();
   scheduleSave();
 }
 
-function updateBadge() {
-  const filled = [...docs, ...members].filter(d => d.content.trim()).length;
-  const badge = document.getElementById('ctxBadge');
-  badge.textContent = `문서 ${filled}개`;
-  badge.className = 'ctx-badge' + (filled > 0 ? ' active' : '');
+function updateMyLog(val) {
+  if (!state.members[currentUser]) state.members[currentUser] = { content: '', joinedAt: Date.now() };
+  state.members[currentUser].content = val;
+  updateBadge();
+  scheduleSave();
+  // 팀원 현황 dot만 업데이트
+  renderMemberStatus();
 }
 
-// ── 채팅 ──────────────────────────────────────────
+function renderMemberStatus() {
+  // 전체 리렌더 대신 dot만 업데이트
+  const rows = document.querySelectorAll('.member-row');
+  const allNames = Object.keys(state.members).sort((a, b) => {
+    if (a === ADMIN_NAME) return -1;
+    if (b === ADMIN_NAME) return 1;
+    return (state.members[a].joinedAt || 0) - (state.members[b].joinedAt || 0);
+  });
+  rows.forEach((row, i) => {
+    const name = allNames[i];
+    if (!name) return;
+    const hasLog = !!(state.members[name]?.content?.trim());
+    const dot = row.querySelector('.log-dot');
+    const label = row.querySelector('.log-dot-label');
+    if (dot) dot.className = 'log-dot' + (hasLog ? ' filled' : '');
+    if (label) label.textContent = hasLog ? '로그 있음' : '미제출';
+  });
+}
+
+function updateBadge() {
+  const baseFilled = Object.values(state.baseDocs).filter(v => v.trim()).length;
+  const memberFilled = Object.values(state.members).filter(m => m.content?.trim()).length;
+  const total = baseFilled + memberFilled;
+  const badge = document.getElementById('ctxBadge');
+  badge.textContent = `문서 ${total}개`;
+  badge.className = 'ctx-badge' + (total > 0 ? ' active' : '');
+}
+
+// ── 채팅 ────────────────────────────────────────
 function buildSystem() {
-  const filled = [...docs, ...members].filter(d => d.content.trim());
-  if (!filled.length) return '아직 입력된 문서가 없습니다. 사용자에게 왼쪽 패널에서 기획안, 회의록, 팀원 업무 로그를 입력해달라고 안내해주세요. 한국어로 친근하게 답변하세요.';
-  let sys = `당신은 개발팀 프로젝트의 업무 현황 어시스턴트입니다.
+  const parts = [];
+  if (state.baseDocs.plan?.trim()) parts.push(`[기획안]\n${state.baseDocs.plan}`);
+  if (state.baseDocs.meeting?.trim()) parts.push(`[회의록]\n${state.baseDocs.meeting}`);
+  Object.entries(state.members).forEach(([name, m]) => {
+    if (m.content?.trim()) parts.push(`[${name} 업무 로그]\n${m.content}`);
+  });
+  if (!parts.length) return '아직 입력된 문서가 없습니다. 한국어로 친근하게 안내해주세요.';
+  return `당신은 개발팀 프로젝트의 업무 현황 어시스턴트입니다.
 아래 문서들을 기반으로만 답변하세요. 외부 정보나 추측은 하지 마세요.
-문서에 없는 내용은 솔직하게 "해당 내용은 입력된 문서에서 확인할 수 없어요"라고 답하세요.
-답변은 한국어로, 핵심만 명확하고 간결하게 작성하세요.\n\n=== 입력된 문서 ===\n\n`;
-  filled.forEach(d => { sys += `[${d.name}]\n${d.content}\n\n`; });
-  return sys;
+문서에 없는 내용은 "해당 내용은 입력된 문서에서 확인할 수 없어요"라고 답하세요.
+답변은 한국어로, 핵심만 명확하고 간결하게 작성하세요.\n\n=== 입력된 문서 ===\n\n${parts.join('\n\n')}`;
 }
 
 function ask(btn) { document.getElementById('chatInput').value = btn.textContent; send(); }
