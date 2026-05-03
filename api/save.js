@@ -5,10 +5,10 @@ export default async function handler(req, res) {
   if (!key || value === undefined) return res.status(400).json({ error: 'Missing key or value' });
 
   try {
-    const kvRes = await fetch(`${process.env.KV_REST_API_URL}/set/${encodeURIComponent(key)}`, {
+    const kvRes = await fetch(`${process.env.UPSTASH_REDIS_REST_URL}/set/${encodeURIComponent(key)}`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${process.env.KV_REST_API_TOKEN}`,
+        Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(value),
