@@ -106,6 +106,17 @@
     overflow: hidden;
   }
 
+  .docs-scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .docs-scroll-area::-webkit-scrollbar { width: 4px; }
+  .docs-scroll-area::-webkit-scrollbar-track { background: transparent; }
+  .docs-scroll-area::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
   .panel-header {
     padding: 14px 16px 10px;
     border-bottom: 1px solid var(--border);
@@ -133,23 +144,18 @@
   }
 
   .doc-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px;
+    padding: 10px 10px 4px;
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
 
-  .doc-list::-webkit-scrollbar { width: 4px; }
-  .doc-list::-webkit-scrollbar-track { background: transparent; }
-  .doc-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+  
 
   .doc-card {
     background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    overflow: hidden;
     transition: border-color 0.15s;
   }
 
@@ -209,8 +215,8 @@
 
   .doc-body textarea {
     width: 100%;
-    min-height: 110px;
-    max-height: 220px;
+    min-height: 120px;
+    max-height: 400px;
     resize: vertical;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -261,7 +267,7 @@
   .del-btn:hover { border-color: #fca5a5; color: #dc2626; }
 
   .add-member-btn {
-    margin: 8px 10px;
+    margin: 4px 10px 12px;
     padding: 9px;
     background: transparent;
     border: 1px dashed var(--border2);
@@ -272,6 +278,7 @@
     text-align: center;
     transition: all 0.15s;
     font-family: 'Pretendard', sans-serif;
+    flex-shrink: 0;
   }
 
   .add-member-btn:hover {
@@ -514,8 +521,10 @@
       <span class="panel-label">컨텍스트 문서</span>
     </div>
 
-    <div class="doc-list" id="docList"></div>
-    <button class="add-member-btn" onclick="addMember()">+ 팀원 추가</button>
+    <div class="docs-scroll-area">
+      <div class="doc-list" id="docList"></div>
+      <button class="add-member-btn" onclick="addMember()">+ 팀원 추가</button>
+    </div>
   </div>
 
   <!-- 오른쪽 채팅 -->
