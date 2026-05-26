@@ -1,70 +1,77 @@
-# 팀 업무 현황 봇
+# 🤖 팀 업무 현황 봇 (Team Work Status Bot)
 
-AI 대화 로그 기반으로 팀 업무 현황을 파악하는 내부 도구입니다.
+AI 대화 로그와 전역 상태 동기화를 기반으로 팀 업무 현황을 실시간으로 파악하는 내부 협업 도구입니다.
 
-## 파일 구조
+## 📂 파일 구조
+
 
 ```
-├── index.html       # 프론트엔드
+
+├── index.html       # 프론트엔드 (DOM 제어 및 UI 렌더링)
 ├── api/
-│   └── chat.js      # Vercel 서버리스 함수 (API 키 보관)
-└── vercel.json      # Vercel 설정
+│   ├── chat.js      # Claude API 중계 및 Context 주입 함수
+│   ├── save.js      # 전역 상태 직렬화 및 DB 저장 함수
+│   └── load.js      # DB 데이터 역직렬화 및 불러오기 함수
+└── vercel.json      # Vercel 인프라 및 라우팅 설정
+
 ```
-
-## 배포 방법 (5분)
-
-### 1. GitHub에 올리기
-1. github.com → New repository → `team-bot` (private 권장)
-2. 이 폴더의 파일 3개를 업로드 (Add file → Upload files)
-   - `index.html`
-   - `api/chat.js`
-   - `vercel.json`
-
-### 2. Vercel에 배포하기
-1. vercel.com → Add New Project
-2. GitHub 연결 후 `team-bot` 저장소 선택
-3. Import 클릭 (설정 변경 없이)
-
-### 3. API 키 환경변수 설정
-배포 후 Vercel 대시보드에서:
-1. 프로젝트 → Settings → Environment Variables
-2. `+ Add` 클릭
-3. Name: `ANTHROPIC_API_KEY`
-4. Value: `sk-ant-...` (발급받은 API 키)
-5. Save → Redeploy
-
-### 4. 팀원 공유
-배포 완료 후 생성된 URL (예: `your-team-bot.vercel.app`)을 팀원들에게 공유하면 됩니다.
-팀원들은 가입/설치 없이 바로 사용 가능합니다.
-
-## 사용법
-
-1. 왼쪽 패널에 **기획안**, **회의록** 붙여넣기
-2. **팀원 추가** 버튼으로 팀원 슬롯 생성
-3. 각 팀원이 AI 대화 요약(`지금까지 내가 한 일 정리해줘`)을 붙여넣기
-4. 오른쪽 채팅에서 업무 현황 질문
-
-## 비용
-
-Anthropic API는 사용량 기반 선불 과금입니다.
-팀 내부 도구 수준 사용 시 월 $3~10 예상.
-
-
-
-## 🏗️ 아키텍처 리뷰 및 기술 부채 (Architecture Review & Technical Debt)
-
-본 프로젝트는 1차 MVP(최소 기능 제품) 구현을 성공적으로 완료하였으나, 설계 및 인프라 구조적 관점에서 향후 고도화가 필요한 몇 가지 명확한 기술 부채와 아키텍처적 한계를 식별하였습니다. 이에 대한 시스템적 검토 내용은 다음과 같습니다.
-
-### 1. 데이터베이스 단일 Key 구조로 인한 I/O 오버헤드
-현재 Upstash Redis NoSQL 저장소에 프로젝트의 전체 상태(기획안, 회의록, 팀원별 로그)를 `team_state`라는 단일 Key에 하나의 거대한 JSON 문자열로 직렬화(Serialization)하여 저장하고 있습니다. 이로 인해 특정 팀원의 데이터만 필요한 상황에서도 전체 문서 데이터셋을 통째로 Read/Write 해야 하는 물리적 비효율성이 존재합니다. 이는 불필요한 네트워크 대역폭 낭비와 서버 메모리 자원 소모를 야기하며, 데이터 규모가 커질수록 `JSON.parse()` 및 `JSON.stringify()` 연산 시 CPU 오버헤드가 급격히 증가하는 병목 구간이 될 수 있습니다.
-
-### 2. 단방향 HTTP 통신의 한계와 동기화 문제
-현재 브라우저와 Vercel 백엔드 서버 간의 대화는 Fetch API 기반의 단방향 HTTP 프로토콜(Request/Response)을 따르고 있습니다. 웹 애플리케이션이 무상태(Stateless)로 동작하기 때문에, 특정 팀원이 업데이트한 데이터가 다른 팀원의 화면에 실시간으로 반영되지 않습니다. 클라이언트 측에서 '새로고침'을 통해 명시적으로 HTTP GET 요청을 날려 렌더링 엔진(DOM 트리)을 갱신하기 전까지는 데이터의 전역 동기화가 이루어지지 않는 사용자 경험(UX) 측면의 한계가 존재합니다.
-
-### 3. 동시성 제어 부재에 따른 경쟁 상태 (Race Condition) 위험
-데이터베이스 내에 개별 칸막이(세분화된 Key) 없이 데이터가 통째로 덮어쓰기(Overwrite) 되는 구조적 한계로 인해, 다수의 사용자가 동시에 [저장] 버튼을 누를 경우 전형적인 **경쟁 상태(Race Condition)**가 발생할 수 있습니다. 예를 들어, 두 명의 팀원이 거의 동시에 각자의 수정 사항을 제출하면, 미세하게 먼저 처리된 프로세스의 데이터가 뒤이어 들어온 프로세스의 덮어쓰기 작업에 의해 누락되는 데이터 유실(Data Loss) 위험을 내포하고 있습니다. 시스템적 임계 구역(Critical Section)에 대한 상호 배제(Mutual Exclusion) 및 락(Lock) 메커니즘이 부재한 상태입니다.
 
 ---
+
+## 🛠️ 배포 및 인프라 구축 방법 (10분)
+
+### 1. GitHub에 소스코드 푸시
+1. github.com에서 새로운 저장소(`team-bot`, Private 권장)를 생성합니다.
+2. 작성된 프로젝트 소스코드 파일들을 해당 레포지토리에 업로드(`git push`)합니다.
+
+### 2. Upstash Redis 데이터베이스 구축 (무상태성 극복)
+서버리스 환경의 무상태성(Stateless)을 극복하고 전역 상태를 유지하기 위해 NoSQL DB를 연동합니다.
+1. upstash.com 회원가입 및 로그인 후 **Redis 데이터베이스**를 생성합니다.
+2. 생성된 DB의 대시보드에서 `REST API` 섹션을 확인합니다.
+3. 환경변수에 등록할 **`UPSTASH_REDIS_REST_URL`**과 **`UPSTASH_REDIS_REST_TOKEN`** 값을 복사해 둡니다.
+
+### 3. Vercel 플랫폼 배포
+1. vercel.com 대시보드에서 `Add New Project`를 클릭합니다.
+2. GitHub 계정을 연동한 후 `team-bot` 저장소를 Import합니다.
+3. 빌드 설정 변경 없이 배포(Deploy)를 진행합니다.
+
+### 4. 핵심 환경변수(Environment Variables) 설정
+보안 및 원격 서버 연결을 위해 Vercel 프로젝트 설정(`Settings > Environment Variables`)에 아래 3가지 환경변수를 반드시 등록해야 합니다.
+
+| Name | Value | 역할 |
+| :--- | :--- | :--- |
+| `ANTHROPIC_API_KEY` | `sk-ant-...` | Anthropic Claude API 인증 키 |
+| `UPSTASH_REDIS_REST_URL` | `https://...upstash.io` | Upstash DB 원격 연결 URL |
+| `UPSTASH_REDIS_REST_TOKEN` | `AbCdEfG...` | Upstash DB REST API 접근 토큰 |
+
+> ⚠️ **주의:** 환경변수 등록 후 시스템에 반영하기 위해 반드시 **Redeploy(재배포)**를 진행해 주세요.
+
+---
+
+## 🏃‍♂️ 사용법
+
+1. **초기 로드:** 페이지 접속 시 `api/load.js`가 구동되어 DB에 저장된 최신 팀 상태를 원격으로 불러옵니다.
+2. **콘텍스트 입력:** 왼쪽 패널에 **기획안** 및 **회의록**을 붙여넣습니다.
+3. **로그 누적:** [팀원 추가] 버튼으로 슬롯을 생성한 뒤, 각 팀원이 고유 AI 대화 요약본을 붙여넣습니다.
+4. **상태 저장:** [저장] 버튼을 누르면 `api/save.js`를 통해 전체 데이터가 JSON 문자열로 직렬화되어 Upstash DB에 영구 보존됩니다.
+5. **AI 현황 분석:** 오른쪽 챗봇 창에서 전체 컨텍스트를 기반으로 종합 업무 현황을 질문합니다.
+
+---
+
+## 🏗️ 아키텍처 리뷰 및 기술 부채 (Architecture Review)
+
+본 프로젝트는 1차 MVP 구현을 성공적으로 완료하였으나, 분산 시스템 및 인프라 구조적 관점에서 향후 고도화가 필요한 몇 가지 명확한 기술 부채를 식별하였습니다.
+
+### 1. 데이터베이스 단일 Key 구조로 인한 I/O 오버헤드
+현재 Upstash Redis에 프로젝트의 전체 상태를 `team_state`라는 단일 Key에 하나의 거대한 JSON 문자열로 직렬화하여 저장하고 있습니다. 이로 인해 특정 팀원의 데이터만 필요한 상황에서도 전체 문서 데이터셋을 통째로 Read/Write 해야 하는 물리적 비효율성이 존재합니다. 이는 데이터 규모가 커질수록 `JSON.parse()` 연산 시 CPU 오버헤드가 증가하는 병목 구간이 될 수 있습니다.
+
+### 2. 단방향 HTTP 통신의 한계 (동기화 문제)
+브라우저와 Vercel 백엔드 간의 대화가 Fetch API 기반의 단방향 HTTP 프로토콜을 따르고 있습니다. 특정 팀원이 업데이트한 데이터가 다른 팀원의 화면에 실시간으로 반영되지 않으며, 클라이언트 측에서 '새로고침'을 통해 명시적으로 HTTP GET 요청을 날려 DOM 트리를 갱신하기 전까지는 실시간 동기화가 이루어지지 않는 한계가 있습니다.
+
+### 3. 동시성 제어 부재에 따른 경쟁 상태 (Race Condition) 위험
+데이터베이스 내에 세분화된 Key(칸막이) 없이 데이터가 뭉탱이로 덮어쓰기(Overwrite) 되는 구조적 한계로 인해, 다수의 사용자가 동시에 [저장] 버튼을 누를 경우 전형적인 **경쟁 상태(Race Condition)**가 발생할 수 있습니다. 미세하게 먼저 처리된 프로세스의 데이터가 뒤이어 들어온 프로세스의 덮어쓰기 작업에 의해 누락되는 데이터 유실(Data Loss) 위험을 내포하고 있어, 향후 임계 구역(Critical Section)에 대한 상호 배제(Lock) 메커니즘 도입이 필요합니다.
+
+```
 
 ## 🚀 향후 발전 과제 (Next Action Items)
 
